@@ -69,6 +69,7 @@ SWAGGER_DEFAULTS = {
         'trace'
     ],
     'DISPLAY_OPERATION_ID': True,
+    'DISABLE_CALL_VIEW_METHOD_WARNING': False
 }
 
 REDOC_DEFAULTS = {

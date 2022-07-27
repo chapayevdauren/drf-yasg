@@ -4,6 +4,7 @@ import logging
 from rest_framework import serializers
 
 from .. import openapi
+from ..app_settings import swagger_settings
 from ..utils import force_real_str, get_field_default, get_object_classes, is_list_view
 
 #: Sentinel value that inspectors must return to signal that they do not know how to handle an object
@@ -41,9 +42,10 @@ def call_view_method(view, method_name, fallback_attr=None, default=None):
             if is_callabale:
                 return view_method()
         except Exception:  # pragma: no cover
-            logger.warning("view's %s raised exception during schema generation; use "
-                           "`getattr(self, 'swagger_fake_view', False)` to detect and short-circuit this",
-                           type(view).__name__, exc_info=True)
+            if not swagger_settings.DISABLE_CALL_VIEW_METHOD_WARNING:
+                logger.warning("view's %s raised exception during schema generation; use "
+                            "`getattr(self, 'swagger_fake_view', False)` to detect and short-circuit this",
+                            type(view).__name__, exc_info=True)
 
     if fallback_attr and hasattr(view, fallback_attr):
         return getattr(view, fallback_attr)
